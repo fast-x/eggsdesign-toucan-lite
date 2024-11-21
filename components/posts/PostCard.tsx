@@ -1,12 +1,17 @@
-import { Cards } from '@phosphor-icons/react';
+// import { Cards } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { lazy } from 'react';
 import styled from 'styled-components';
 import { bezier } from '../../styles/variables';
 import { Post as PostType } from '../../types';
 import Avatar from '../Avatar';
 import CommentsCount from '../info/CommentsCount';
+const Cards = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.Cards,
+  })),
+);
 
 type Props = {
   post: PostType;

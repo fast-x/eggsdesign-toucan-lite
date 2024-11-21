@@ -1,9 +1,21 @@
-import React from 'react';
-import styled from 'styled-components';
 import { rgba } from 'polished';
-import { colDarkBlue, colSlate, colWhite, snappy } from '../../styles/variables';
+import React, { lazy } from 'react';
+import styled from 'styled-components';
 import { buttonResetStyles } from '../../styles/styles';
-import { CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { colDarkBlue, colSlate, colWhite, snappy } from '../../styles/variables';
+// import { CaretLeft, CaretRight } from '@phosphor-icons/react';
+// Lazy load icons to reduce file overhead
+const CaretLeft = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.CaretLeft,
+  })),
+);
+
+const CaretRight = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.CaretRight,
+  })),
+);
 
 type Props = {
   images: any[];

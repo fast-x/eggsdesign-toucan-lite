@@ -1,10 +1,15 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
+import React, { lazy, useContext } from 'react';
 import ReactModal from 'react-modal';
+import styled from 'styled-components';
+import { ButtonColor, ButtonVariant } from '../../@types';
 import { ModalContext } from '../../contexts/ModalContext';
 import Button from '../clickables/Button';
-import { ButtonColor, ButtonVariant } from '../../@types';
-import { X } from '@phosphor-icons/react';
+// import { X } from '@phosphor-icons/react';
+const X = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.X,
+  })),
+);
 
 type Props = {
   children: React.ReactNode;

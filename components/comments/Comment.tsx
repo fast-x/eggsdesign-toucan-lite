@@ -1,14 +1,19 @@
-import React, { useContext, useState } from 'react';
-import { Comment as IComment, Ref, User } from '../../types';
-import { getDateDiff } from '../../scripts/helpers';
+import { lazy, useContext, useState } from 'react';
 import styled from 'styled-components';
-import Avatar from '../Avatar';
-import { tokens } from '../../styles/variables';
-import AuthContext from '../../contexts/AuthContext';
-import { Trash } from '@phosphor-icons/react';
-import Button from '../clickables/Button';
 import { ButtonColor, ButtonSize, ButtonVariant } from '../../@types';
+import AuthContext from '../../contexts/AuthContext';
+import { getDateDiff } from '../../scripts/helpers';
+import { tokens } from '../../styles/variables';
+import { Comment as IComment, Ref, User } from '../../types';
+import Avatar from '../Avatar';
+import Button from '../clickables/Button';
 import LoadingSpinnerRing from '../info/LoadingSpinnerRing';
+// import { Trash } from '@phosphor-icons/react';
+const Trash = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.Trash,
+  })),
+);
 
 type CommentType = IComment & {
   onDelete: () => void;

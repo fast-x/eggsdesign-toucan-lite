@@ -1,19 +1,23 @@
-import styled from 'styled-components';
-import React, { useContext } from 'react';
-import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import React, { useContext } from 'react';
+import styled from 'styled-components';
 
 import { ButtonSize, ButtonVariant } from '../../@types';
+import AuthContext from '../../contexts/AuthContext';
 import { formatDateString } from '../../scripts/helpers';
+import { screenWidthLarge, tokens } from '../../styles/variables';
+import { Post, User } from '../../types';
 import Avatar from '../Avatar';
 import Tags from '../Tags';
 import Button from '../clickables/Button';
-import { Trash } from '@phosphor-icons/react';
-
-import { screenWidthLarge, tokens } from '../../styles/variables';
-import { Post, User } from '../../types';
 import Comments from '../comments/Comments';
-import AuthContext from '../../contexts/AuthContext';
+// import { Trash } from '@phosphor-icons/react';
+const Trash = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.Trash,
+  })),
+);
 
 type Props = {
   author: User;
@@ -110,7 +114,9 @@ const Wrapper = styled.div`
   @media (max-width: 1199px) {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.2s ease, padding-top 0.2s ease;
+    transition:
+      max-height 0.2s ease,
+      padding-top 0.2s ease;
     &.is-open {
       max-height: none;
       overflow-y: auto;
@@ -138,7 +144,9 @@ const Wrapper = styled.div`
   @media (min-width: ${screenWidthLarge}) {
     width: 0;
     overflow: hidden;
-    transition: width 0.2s ease, opacity 0.2s ease;
+    transition:
+      width 0.2s ease,
+      opacity 0.2s ease;
     opacity: 0;
     &.is-open {
       width: 576px;

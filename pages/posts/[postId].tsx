@@ -1,8 +1,23 @@
-import { ArrowLeft, ArrowsInSimple, ArrowsOutSimple } from '@phosphor-icons/react';
+// import { ArrowLeft, ArrowsInSimple, ArrowsOutSimple } from '@phosphor-icons/react';
+const ArrowLeft = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.ArrowLeft,
+  })),
+);
+const ArrowsInSimple = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.ArrowsInSimple,
+  })),
+);
+const ArrowsOutSimple = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.ArrowsOutSimple,
+  })),
+);
 import type { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { lazy, useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ButtonVariant } from '../../@types';
 import Button from '../../components/clickables/Button';

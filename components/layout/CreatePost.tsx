@@ -3,11 +3,26 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { lighten } from 'polished';
-import React, { CSSProperties, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, lazy, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
+// import { ImageSquare, Plus, Trash } from '@phosphor-icons/react';
+const ImageSquare = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.ImageSquare,
+  })),
+);
+const Plus = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.Plus,
+  })),
+);
+const Trash = lazy(() =>
+  import('@phosphor-icons/react').then((module) => ({
+    default: module.Trash,
+  })),
+);
 
-import { ImageSquare, Plus, Trash } from '@phosphor-icons/react';
 import {
   DragDropContext,
   Draggable,
