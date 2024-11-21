@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
+import React, { lazy, useContext } from 'react';
 import styled from 'styled-components';
 
 import { ButtonSize, ButtonVariant } from '../../@types';
