@@ -10,7 +10,7 @@ export default NextAuth({
       tenantId: process.env.AZURE_AD_TENANT_ID,
       authorization: {
         params: {
-          scopes: process.env.AZURE_AD_SCOPES?.split(',') || ['openid', 'profile', 'email'],
+          scopes: process.env.AZURE_AD_SCOPES,
         },
       },
     }),
