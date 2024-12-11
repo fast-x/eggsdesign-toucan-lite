@@ -12,6 +12,7 @@ export default NextAuth({
       authorization: {
         params: {
           scopes: process.env.AZURE_AD_SCOPES,
+          checks: ['pkce', 'state'],
         },
       },
     }),
