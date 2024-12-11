@@ -17,6 +17,7 @@ interface Props {
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
+  
 
   console.log('1 TEST - Session Response:', session);
 

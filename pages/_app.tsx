@@ -1,14 +1,21 @@
-import { useState, useEffect } from 'react';
+import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Router from 'next/router';
-import { SessionProvider } from 'next-auth/react';
-import { GlobalStyle } from '../styles/globalStyles';
-import ModalProvider from '../contexts/ModalProvider';
+import { useEffect, useState } from 'react';
 import ToucanLoader from '../components/info/ToucanLoader';
 import { AuthProvider } from '../contexts/AuthContext';
+import ModalProvider from '../contexts/ModalProvider';
+import { GlobalStyle } from '../styles/globalStyles';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const [isLoading, setIsLoading] = useState(false);
+
+  // test use
+  useEffect(() => {
+    Router.events.on('routeChangeStart', () => setIsLoading(true));
+    Router.events.on('routeChangeComplete', () => setIsLoading(false));
+    Router.events.on('routeChangeError', () => setIsLoading(false));
+  }, []);
 
   useEffect(() => {
     if (document && document.documentElement) {
