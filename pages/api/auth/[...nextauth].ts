@@ -18,6 +18,17 @@ export default NextAuth({
 
   debug: true,
 
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        sameSite: 'lax',
+      },
+    },
+  },
   callbacks: {
     async session({ session, token }) {
       console.log('Session details:', { session, token });
