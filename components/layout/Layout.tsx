@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import React, { useContext } from 'react';
-import { ModalContext } from '../../contexts/ModalContext';
 import Head from 'next/head';
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import { ModalContext } from '../../contexts/ModalContext';
 interface Props {
   children: React.ReactNode;
 }
