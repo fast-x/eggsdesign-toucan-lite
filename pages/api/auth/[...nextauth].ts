@@ -17,4 +17,15 @@ export default NextAuth({
   ],
 
   debug: true,
+  callbacks: {
+    async session({ session, token }) {
+      console.log('Session:', session);
+      console.log('Token:', token);
+      return session;
+    },
+    async jwt({ token, user }) {
+      console.log('JWT Token:', token);
+      return token;
+    },
+  },
 });
