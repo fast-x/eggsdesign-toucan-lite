@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { getServerSession } from 'next-auth';
+import { getSession } from 'next-auth/react';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { CenterContent } from '../components';
 import Header from '../components/layout/Header';
@@ -9,7 +9,6 @@ import AuthContext from '../contexts/AuthContext';
 import { getAllPosts, getAllTags, getProfileFromEmail } from '../scripts/api';
 import { loginRedirectConfig } from '../scripts/helpers';
 import { Post, TagByUser, User } from '../types';
-import { authOptions } from './api/auth/[...nextauth]';
 
 interface Props {
   user: User;
@@ -17,10 +16,8 @@ interface Props {
   tags: TagByUser[];
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log('TEST 19 Received cookies:', context.req.headers.cookie);
   console.log('TEST 20 context .', context);
-  // const session = await getSession(context);
-  const session = await getServerSession(context.req, context.res, authOptions);
+  const session = await getSession(context);
   console.log('1 TEST - Session Response:', session);
 
   if (session === null || !session.user?.email) {
