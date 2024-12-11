@@ -17,10 +17,21 @@ export default NextAuth({
   ],
 
   debug: true,
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: process.env.NODE_ENV === 'production', // Disable in development
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax', // Consider 'none' if your site involves cross-site requests
+        path: '/',
+      },
+    },
+  },
+
   callbacks: {
     async session({ session, token }) {
-      console.log('Session:', session);
-      console.log('Token:', token);
+      console.log('TEST 22 ...authnext ]Session details:', { session, token });
       return session;
     },
     async jwt({ token, user }) {

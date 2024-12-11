@@ -16,6 +16,8 @@ interface Props {
   tags: TagByUser[];
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log('TEST 19 Received cookies:', context.req.headers.cookie);
+  console.log('TEST 20 context .', context);
   const session = await getSession(context);
 
   console.log('1 TEST - Session Response:', session);
