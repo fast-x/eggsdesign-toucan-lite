@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { getSession } from 'next-auth/react';
+import { getToken } from 'next-auth/jwt';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { CenterContent } from '../components';
 import Header from '../components/layout/Header';
@@ -15,19 +15,19 @@ interface Props {
   posts: Post[];
   tags: TagByUser[];
 }
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log('TEST 19 Received cookies:', context.req.headers.cookie);
-  console.log('TEST 20 context .', context);
-  const session = await getSession(context);
+  const secret = process.env.NEXTAUTH_SECRET;
+  const token = await getToken({ req: context.req, secret });
 
-  console.log('1 TEST - Session Response:', session);
+  console.log('Decoded JWT Token:', token);
 
-  if (session === null || !session.user?.email) {
+  if (!token || !token.email) {
     return loginRedirectConfig;
   }
 
   try {
-    const userProfile = await getProfileFromEmail(session.user.email);
+    const userProfile = await getProfileFromEmail(token.email);
     const tags = await getAllTags();
     const posts = await getAllPosts();
 
@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
         user: {
           ...userProfile,
-          email: session.user.email,
+          email: token.email,
           image: userProfile?.image || null,
         },
         posts,
@@ -44,9 +44,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   } catch (error) {
     console.error('Error in getServerSideProps:', error);
-
     return {
-      notFound: true, // Return a 404 page in case of errors
+      notFound: true,
     };
   }
 };
@@ -77,3 +76,83 @@ const Home: NextPage<Props> = ({ user, posts, tags }) => {
 };
 
 export default Home;
+
+// import type { GetServerSideProps, NextPage } from 'next';
+// import { getSession } from 'next-auth/react';
+// import React, { useCallback, useContext, useEffect } from 'react';
+// import { CenterContent } from '../components';
+// import Header from '../components/layout/Header';
+// import Layout from '../components/layout/Layout';
+// import PostList from '../components/posts/PostList';
+// import AuthContext from '../contexts/AuthContext';
+// import { getAllPosts, getAllTags, getProfileFromEmail } from '../scripts/api';
+// import { loginRedirectConfig } from '../scripts/helpers';
+// import { Post, TagByUser, User } from '../types';
+
+// interface Props {
+//   user: User;
+//   posts: Post[];
+//   tags: TagByUser[];
+// }
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   console.log('TEST 19 Received cookies:', context.req.headers.cookie);
+//   console.log('TEST 20 context .', context);
+//   const session = await getSession(context);
+
+//   console.log('1 TEST - Session Response:', session);
+
+//   if (session === null || !session.user?.email) {
+//     return loginRedirectConfig;
+//   }
+
+//   try {
+//     const userProfile = await getProfileFromEmail(session.user.email);
+//     const tags = await getAllTags();
+//     const posts = await getAllPosts();
+
+//     return {
+//       props: {
+//         user: {
+//           ...userProfile,
+//           email: session.user.email,
+//           image: userProfile?.image || null,
+//         },
+//         posts,
+//         tags,
+//       },
+//     };
+//   } catch (error) {
+//     console.error('Error in getServerSideProps:', error);
+
+//     return {
+//       notFound: true, // Return a 404 page in case of errors
+//     };
+//   }
+// };
+
+// const Home: NextPage<Props> = ({ user, posts, tags }) => {
+//   const [fetchedPosts] = React.useState(posts);
+//   const { setUser } = useContext(AuthContext);
+//   const setUserAuth = useCallback(() => {
+//     setUser(user);
+//   }, [setUser, user]);
+
+//   useEffect(() => {
+//     setUserAuth();
+//   }, [setUserAuth]);
+
+//   return (
+//     <>
+//       <Layout>
+//         <Header tags={tags} />
+//         <main>
+//           <CenterContent>
+//             <section>{fetchedPosts && <PostList posts={fetchedPosts} />}</section>
+//           </CenterContent>
+//         </main>
+//       </Layout>
+//     </>
+//   );
+// };
+
+// export default Home;
