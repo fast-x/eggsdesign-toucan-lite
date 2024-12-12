@@ -9,7 +9,7 @@ export default NextAuth({
       clientId: process.env.AZURE_AD_CLIENT_ID || '',
       tenantId: process.env.AZURE_AD_TENANT_ID,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
-      wellKnown: 'https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration',
+      wellKnown: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/v2.0/.well-known/openid-configuration`,
       authorization: {
         params: {
           response_type: 'code',
