@@ -8,7 +8,7 @@ export default NextAuth({
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID || '',
       tenantId: process.env.AZURE_AD_TENANT_ID,
-      // clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
       authorization: {
         params: {
           response_type: 'code',
