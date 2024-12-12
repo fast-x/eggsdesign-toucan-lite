@@ -5,12 +5,13 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     AzureADProvider({
-      clientId: process.env.AZURE_AD_CLIENT_ID || '',
-      tenantId: process.env.AZURE_AD_TENANT_ID || '',
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: process.env.AZURE_AD_SCOPES || 'openid profile email',
+          response_type: 'code',
+          scope: process.env.AZURE_AD_SCOPES,
           code_challenge_method: 'S256',
         },
       },
