@@ -7,11 +7,10 @@ export default NextAuth({
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID,
       tenantId: process.env.AZURE_AD_TENANT_ID,
-      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
       authorization: {
         params: {
-          response_type: 'code',
           scope: process.env.AZURE_AD_SCOPES,
+          response_type: 'code',
           code_challenge_method: 'S256',
         },
       },
