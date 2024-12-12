@@ -16,9 +16,8 @@ interface Props {
   tags: TagByUser[];
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  context.res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
-  console.log('TEST 20 context .', context);
   const session = await getSession(context);
+  console.log('TEST 20 context .', context);
   console.log('1 TEST - Session Response:', session);
   console.log('Cookies context.req.header.cookie:', context.req.headers.cookie);
 
