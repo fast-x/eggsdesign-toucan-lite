@@ -4,10 +4,10 @@ import AzureADProvider from 'next-auth/providers/azure-ad';
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
-    // Type assertion to bypass the clientSecret requirement
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID || '',
       tenantId: process.env.AZURE_AD_TENANT_ID || '',
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
       authorization: {
         params: {
           scope: process.env.AZURE_AD_SCOPES || 'openid profile email',
@@ -15,7 +15,7 @@ export default NextAuth({
         },
       },
       checks: ['pkce', 'state'],
-    } as any), // <--- Add `as any` to bypass the type error
+    } as any),
   ],
   debug: true,
 });
