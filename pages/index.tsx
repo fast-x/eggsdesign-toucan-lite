@@ -20,6 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log('TEST 20 context .', context);
   const session = await getSession(context);
   console.log('1 TEST - Session Response:', session);
+  console.log('Cookies context.req.header.cookie:', context.req.headers.cookie);
 
   if (session === null || !session.user?.email) {
     return loginRedirectConfig;
