@@ -1,4 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
+import { getServerSession } from 'next-auth';
 import { getSession } from 'next-auth/react';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { CenterContent } from '../components';
@@ -9,6 +10,7 @@ import AuthContext from '../contexts/AuthContext';
 import { getAllPosts, getAllTags, getProfileFromEmail } from '../scripts/api';
 import { loginRedirectConfig } from '../scripts/helpers';
 import { Post, TagByUser, User } from '../types';
+import { authOptions } from './api/auth/[...nextauth]';
 
 interface Props {
   user: User;
@@ -19,15 +21,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   context.res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
   console.log('TEST 20 context .', context);
   const session = await getSession(context);
+  const session2 = await getServerSession(context.req, context.res, authOptions);
   console.log('1 TEST - Session Response:', session);
   console.log('Cookies context.req.header.cookie:', context.req.headers.cookie);
 
-  if (session === null || !session.user?.email) {
+  if (session2 === null || !session2.user?.email) {
     return loginRedirectConfig;
   }
 
   try {
-    const userProfile = await getProfileFromEmail(session.user.email);
+    const userProfile = await getProfileFromEmail(session2.user.email);
     const tags = await getAllTags();
     const posts = await getAllPosts();
 
@@ -35,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
         user: {
           ...userProfile,
-          email: session.user.email,
+          email: session2.user.email,
           image: userProfile?.image || null,
         },
         posts,
