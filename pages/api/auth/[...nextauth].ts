@@ -1,39 +1,58 @@
-import NextAuth, { Session, User } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+import NextAuth from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 
 export default NextAuth({
-  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     AzureADProvider({
-      clientId: process.env.AZURE_AD_CLIENT_ID || '',
-      tenantId: process.env.AZURE_AD_TENANT_ID,
-      clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
-      wellKnown: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/v2.0/.well-known/openid-configuration`,
+      clientId: process.env.AZURE_AD_CLIENT_ID!,
+      tenantId: process.env.AZURE_AD_TENANT_ID!,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
       authorization: {
         params: {
-          response_type: 'code',
-          scope: process.env.AZURE_AD_SCOPES || 'openid profile email',
-          code_challenge_method: 'S256',
+          scope: process.env.AZURE_AD_SCOPE,
         },
       },
-      checks: ['pkce', 'state'],
     } as any),
   ],
-  callbacks: {
-    async jwt({ token }: { token: JWT }) {
-      return token;
-    },
-    async session({ session, user }: { session: Session; user: User }) {
-      session.user = {
-        name: user.name,
-        email: user.email,
-      };
-      return session;
-    },
-  },
   debug: true,
 });
+
+// import NextAuth, { Session, User } from 'next-auth';
+// import { JWT } from 'next-auth/jwt';
+// import AzureADProvider from 'next-auth/providers/azure-ad';
+
+// export default NextAuth({
+//   secret: process.env.NEXTAUTH_SECRET,
+//   providers: [
+//     AzureADProvider({
+//       clientId: process.env.AZURE_AD_CLIENT_ID || '',
+//       tenantId: process.env.AZURE_AD_TENANT_ID,
+//       clientSecret: process.env.AZURE_AD_CLIENT_SECRET || '',
+//       wellKnown: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/v2.0/.well-known/openid-configuration`,
+//       authorization: {
+//         params: {
+//           response_type: 'code',
+//           scope: process.env.AZURE_AD_SCOPES || 'openid profile email',
+//           code_challenge_method: 'S256',
+//         },
+//       },
+//       checks: ['pkce', 'state'],
+//     } as any),
+//   ],
+//   callbacks: {
+//     async jwt({ token }: { token: JWT }) {
+//       return token;
+//     },
+//     async session({ session, user }: { session: Session; user: User }) {
+//       session.user = {
+//         name: user.name,
+//         email: user.email,
+//       };
+//       return session;
+//     },
+//   },
+//   debug: true,
+// });
 
 // export default NextAuth({
 //   secret: process.env.NEXTAUTH_SECRET,
