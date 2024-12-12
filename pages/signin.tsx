@@ -1,50 +1,35 @@
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthContext } from '../contexts/AuthContext';
 
 export default function Signin() {
   const router = useRouter();
-  const { status } = useSession();
   const { setUser } = useAuthContext();
+  const [prevStatus, setPrevStatus] = useState<'authenticated' | 'loading' | 'unauthenticated' | null>(null);
 
-  // useEffect(() => {
-  //   if (status === 'unauthenticated') {
-  //     console.log('No JWT');
-  //     console.log(status);
-  //     void signIn(undefined, { callbackUrl: '/' });
-  //   } else if (status === 'authenticated') {
-  //     void router.push('/');
-  //   }
-  // }, [status]);
+  const { data: session, status } = useSession();
 
-  // TEST 1
-  // useEffect(() => {
-  //   if (status === 'unauthenticated') {
-  //     console.log('No JWT');
-
-  //     console.log('2 - TEST - add error msg in signin');
-  //     void signIn('azure-ad', { callbackUrl: '/' }).catch((err) => console.error('Sign-in error:', err));
-  //   } else if (status === 'authenticated') {
-  //     void router.push('/');
-  //   }
-  // }, [status]);
-
-  // TEST 2
   useEffect(() => {
+    // Log when status changes
+    if (status !== prevStatus) {
+      console.log(`Status changed from ${prevStatus} to ${status}`);
+      setPrevStatus(status); // This now correctly handles all status types
+    }
+
     if (status === 'authenticated') {
-      // Fetch user data here if necessary or directly set the user
-      // Example:
-      // const userData = await fetchUserData();
-      // setUser(userData);
-      router.push('/');
-      console.log('No JWT');
+      console.log('User is authenticated');
+      console.log('Session:', session); // Log the session object
+      console.log('User details:', session?.user); // Log specific user details
+      router.push('/'); // Redirect to home page
+    } else if (status === 'unauthenticated') {
+      console.log('User is unauthenticated');
       signIn('azure-ad', { callbackUrl: '/' }).catch((err) => {
         console.error('Sign-in error:', err);
-        // Optionally set error in state and show in UI
+        console.log('Error details:', err);
       });
     }
-  }, [status, router, setUser]);
+  }, [status, session, router]);
 
   return <div></div>;
 }
