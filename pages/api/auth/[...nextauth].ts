@@ -9,7 +9,7 @@ export default NextAuth({
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
       authorization: {
         params: {
-          scope: process.env.AZURE_AD_SCOPE,
+          scope: process.env.AZURE_AD_SCOPES,
         },
       },
     } as any),
