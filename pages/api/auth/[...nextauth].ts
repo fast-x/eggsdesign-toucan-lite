@@ -14,6 +14,11 @@ export default NextAuth({
       },
     } as any),
   ],
-
+  callbacks: {
+    async session({ session, user }) {
+      console.log('Session callback from [...nextauth]:', session);
+      return session;
+    },
+  },
   debug: true,
 });

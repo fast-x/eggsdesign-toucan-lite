@@ -18,8 +18,10 @@ interface Props {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   console.log('TEST 20 context .', context);
-  console.log('1 TEST - Session Response:', session);
+
   console.log('Cookies context.req.header.cookie:', context.req.headers.cookie);
+
+  console.log('TEST-LOG-LINE 24 Session in getServerSideProps:', session);
 
   if (session === null || !session.user?.email) {
     return loginRedirectConfig;

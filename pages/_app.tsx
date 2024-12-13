@@ -8,7 +8,7 @@ import ModalProvider from '../contexts/ModalProvider';
 import { GlobalStyle } from '../styles/globalStyles';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  console.log('12, session in _app page -> ', session);
+  console.log('TEST-LOG-LINE11_Session in _app page ->', session);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
