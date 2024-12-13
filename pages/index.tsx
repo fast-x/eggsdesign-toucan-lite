@@ -1,63 +1,46 @@
-import type { GetServerSideProps, NextPage } from 'next';
-import { getSession } from 'next-auth/react';
-import React, { useCallback, useContext, useEffect } from 'react';
+import type { GetStaticProps, NextPage } from 'next';
+import { getSession, useSession } from 'next-auth/react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { CenterContent } from '../components';
 import Header from '../components/layout/Header';
 import Layout from '../components/layout/Layout';
 import PostList from '../components/posts/PostList';
 import AuthContext from '../contexts/AuthContext';
-import { getAllPosts, getAllTags, getProfileFromEmail } from '../scripts/api';
-import { loginRedirectConfig } from '../scripts/helpers';
+import { getAllPosts, getAllTags } from '../scripts/api';
 import { Post, TagByUser, User } from '../types';
 
 interface Props {
-  user: User;
   posts: Post[];
   tags: TagByUser[];
 }
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-  console.log('TEST 20 context .', context);
 
-  console.log('Cookies context.req.header.cookie:', context.req.headers.cookie);
-
-  console.log('TEST-LOG-LINE 24 Session in getServerSideProps:', session);
-
-  if (session === null || !session.user?.email) {
-    return loginRedirectConfig;
-  }
-
-  try {
-    const userProfile = await getProfileFromEmail(session.user.email);
-    const tags = await getAllTags();
-    const posts = await getAllPosts();
-
-    return {
-      props: {
-        user: {
-          ...userProfile,
-          email: session.user.email,
-          image: userProfile?.image || null,
-        },
-        posts,
-        tags,
-      },
-    };
-  } catch (error) {
-    console.error('Error in getServerSideProps:', error);
-
-    return {
-      notFound: true, // Return a 404 page in case of errors
-    };
-  }
-};
-
-const Home: NextPage<Props> = ({ user, posts, tags }) => {
-  const [fetchedPosts] = React.useState(posts);
+const Home: NextPage<Props> = ({ posts, tags }) => {
+  const [fetchedPosts] = useState(posts);
   const { setUser } = useContext(AuthContext);
+  const { data: session, status } = useSession();
+  const [user, setUserState] = useState<User | null>(null);
+
   const setUserAuth = useCallback(() => {
-    setUser(user);
+    if (user) {
+      setUser(user);
+    }
   }, [setUser, user]);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      if (session?.user) {
+        setUserState({
+          ...session.user,
+          email: session.user.email ?? '',
+          // @ts-ignore
+          image: session.user.image ?? null,
+        });
+      }
+    };
+
+    fetchSession();
+  }, []);
 
   useEffect(() => {
     setUserAuth();
@@ -69,12 +52,34 @@ const Home: NextPage<Props> = ({ user, posts, tags }) => {
         <Header tags={tags} />
         <main>
           <CenterContent>
+            {status === 'authenticated' ? <p>Welcome, {session?.user?.email}!</p> : <p>You are not logged in.</p>}
             <section>{fetchedPosts && <PostList posts={fetchedPosts} />}</section>
           </CenterContent>
         </main>
       </Layout>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const tags = await getAllTags();
+    const posts = await getAllPosts();
+
+    return {
+      props: {
+        posts,
+        tags,
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error('Error in getStaticProps:', error);
+
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default Home;
