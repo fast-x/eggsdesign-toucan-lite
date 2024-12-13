@@ -16,9 +16,12 @@ export default NextAuth({
   ],
   callbacks: {
     async session({ session, user }) {
-      console.log('Session callback from [...nextauth]:', session);
+      console.log('Session callback from [...next]:', session);
       return session;
     },
+  },
+  pages: {
+    signIn: '/signin', // Points to your custom sign-in page
   },
   debug: true,
 });
